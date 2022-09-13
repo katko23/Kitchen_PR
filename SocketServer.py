@@ -1,21 +1,48 @@
 # Python 3 server example
-import socket
+import json
+import socket,Setings
+import threading
+from threading import Thread
+import Cooking
 
-hostName = "127.12.12.128"
-serverPort = 27003
+hostName = Setings.serverName
+serverPort = Setings.this_serverPort
 
+class Server(Thread):
 
-sock = socket.socket() #socket creation
-sock.bind((hostName,serverPort)) # socket binding on LAN
-sock.listen(4096) #server a listen
+    def __init__(self):
+        Thread.__init__(self)
 
-print('socket is listening')
+    def run(self):
+        sock = socket.socket()  # socket creation
+        sock.bind((hostName, serverPort))  # socket binding on LAN
+        sock.listen(4096)  # server a listen
 
-while True:
-    c, addr = sock.accept()
-    print('got connection from ', addr)
+        print('socket is listening')
 
-    jsonReceived = c.recv(1024)
-    print("Json received -->", jsonReceived)
+        while True:
+            c, addr = sock.accept()
+            print('got connection from ', addr)
 
-    c.close()
+            jsonReceived = c.recv(1024).decode('utf-8')
+            recvs = self.data_received(jsonReceived)
+            ordersLock = threading.Lock()  # create a mutex
+            ordersLock.acquire()
+            Cooking.orders.append(recvs)
+            ordersLock.release()
+            print("Json received -->\n", jsonReceived,"\n")
+
+            c.close()
+
+    def data_received(self,temp):
+        string = temp.split("\n")
+        for i in range(6):
+            string.pop(0)
+        dictionary = dict()
+        for i in string:
+            words = i.split(":")
+            secondWord = str(words[1]).split(",")
+            if(len(words) > 0):
+                dictionary.update({str(words[0]) : str(secondWord[0])})
+        return dictionary
+
