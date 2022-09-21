@@ -1,0 +1,3 @@
+Names = ["Gordon", "Nicolas", "Fred", "BOB", "AGARUCHIMARU", "FIGZNAIETkto", "MeCat", "KitKat"]
+Surname = ["Ramsy", "Sarcosy", "Flamel", "Tesla", "Jhonson", "OldGrizley", "BearGrills", "Dog"]
+CatchPhrase = ["Feel the best taste", "Try new recipes with us", "Taste inventer", "Speak with the taste", "What’s that smell?", "Good food changes the mood", "Delicious Food jumping into the mouth", "The secret is at the table"]
