@@ -4,7 +4,7 @@ from threading import Thread
 import Setings
 import requests
 import time
-
+from CookSocket import Cook
 
 def search_item(elem, list_where_search):
     funcLock = threading.Lock()
@@ -32,23 +32,26 @@ def give_loc_item(elem, list_where_search):
     funcLock.release()
 
 def search_items(list_search_elem, list_where_search):
+    funcLock = threading.Lock()
+    funcLock.acquire()
     for i in range(len(list_where_search)):
         if search_item(list_search_elem[i], list_where_search) == False : return False
+
+    funcLock.release()
     return True
 
 def delete_item(old_item, items_list):
-    funcLock = threading.Lock()
-    funcLock.acquire()
+
     for i in range(len(items_list)):
         if items_list[i] == old_item:
             items_list.pop(i)
-            funcLock.release()
             return items_list
-    funcLock.release()
 
 def delete_items(list_old_items, items_list):
+
     for i in range(len(list_old_items)):
         delete_item(list_old_items[i], items_list)
+
     return items_list
 
 def delete_item_o(old_item, items_list):
@@ -93,7 +96,6 @@ class Order_Table(Thread):
                 self.order_receiving()
                 print(self.items_to_make)
                 lockReceive.release()
-
 
             # # stergem toate itemurile care au fost realizate dar inca nu au fost trimise
             # delete_items(self.items_done, self.items_to_make)
@@ -173,3 +175,6 @@ class Order_Table(Thread):
         funcLock.acquire()
         self.items_done.append(new_items)
         funcLock.release()
+
+
+

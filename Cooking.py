@@ -31,16 +31,18 @@ class Cooking_C(Thread):
         items.append(0)
         cookingTime = Plates.plates[item_id]['preparation-time']
         time.sleep(cookingTime * Setings.timeUnit)
-        cookingLock.acquire()  # stop
         #Orders_Table.delete_item(item_id, Cooks_Hiring.cooks[id_cks].items_making[id_cks])
         #print("Update the list of items what cook made " , Cooks_Hiring.cooks[id_cks].items_making[id_cks])
         items[1] = id_cks + 1
         if len(items)>0 :
             print(order_Table.items_done,'\n\n')
             print('items = ' , items)
-            order_Table.add_items_done(items)
-        print("add to the items that is done the item that cook has made now ", Orders_Table.Order_Table.items_done,'\n')
-        cookingLock.release()  # release
+
+            Cooks_Hiring.cooks[id_cks].cook_lock.acquire()
+            Cooks_Hiring.cooks[id_cks].items_maded.append(items)
+            Cooks_Hiring.cooks[id_cks].cook_lock.release()
+        print("add to the items that is done , the items that cook has make ", Orders_Table.Order_Table.items_done,'\n')
+        # time.sleep(0.5)
         print("Now I have = ",order_Table.items_done)
 
 

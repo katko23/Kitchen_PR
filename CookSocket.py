@@ -16,7 +16,8 @@ class Cook(Thread):
         self.proficiency = proficiency
         self.name = Randoms.Names[random.randint(0,7)] + ' ' + Randoms.Surname[random.randint(0,7)]
         self.catch_phrase = Randoms.CatchPhrase[random.randint(0,7)]
-
+        self.items_maded = []
+        self.cook_lock = threading.Lock()
         self.cooking_threads = []
 
     items_making = []
@@ -45,6 +46,7 @@ class Cook(Thread):
                 if (len(c.items) == 0 and len(self.items_making[self.id_cook - 1]) > 0):
                     item_Now = self.items_making[self.id_cook-1].pop(0)
                     c.items.append(item_Now)
+                    self.cookFunc()
 
 
 
@@ -100,9 +102,14 @@ class Cook(Thread):
             x = len(order_Table.items_to_make)
             checkLock.release()
 
-
-
-
+    def cookFunc(self):
+        self.cookingLock.acquire()
+        from main import order_Table
+        if order_Table.items_done == [] :
+            order_Table.items_done = self.items_maded
+        else:
+            order_Table.items_done = order_Table.items_done + self.items_maded
+        self.cookingLock.release()
 
         # body_bytes = self.body.encode('ascii')
         # header_bytes = self.headers.format(
