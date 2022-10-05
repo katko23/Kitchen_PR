@@ -22,8 +22,13 @@ class Server(Thread):
             # force=True, above, is necessary if another developer
             # forgot to set the MIME type to 'application/json'
             print('data from client:', input_json)
-            Orders_Table.Order_Table.orders_raw.append(input_json)
+            serverLock = threading.Lock()
+            serverLock.acquire()
+            Orders_Table.Order_Table.orders_lock.acquire()
+            Orders_Table.Order_Table.orders.append(input_json)
             Orders_Table.Order_Table.received_orders.append(1)
+            Orders_Table.Order_Table.orders_lock.release()
+            serverLock.release()
             print("Append raw orders to the queue")
             dictToReturn = {'answer': "Kitchen received"}
             return jsonify(dictToReturn)
