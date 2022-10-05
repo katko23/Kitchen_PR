@@ -1,9 +1,15 @@
 #order :
 
-hostName = "localhost"
+# hostName = "localhost"
+# serverPort = 27004
+#
+# serverName =  "localhost"
+# this_serverPort = 27003
+
+hostName = ""
 serverPort = 27004
 
-serverName =  "localhost"
+serverName =  ""
 this_serverPort = 27003
 
 nr_of_chef_cooks = 1
