@@ -100,7 +100,10 @@ class Order_Table(Thread):
     lockReceive = threading.RLock()
     received_orders = []
 
+
     def run(self):
+        import CookingAparatus
+        CookingAparatus.Start()
 
         while True:
             import Items_Table,CookSocket
@@ -221,7 +224,7 @@ class Order_Table(Thread):
         funcLock.release()
 
     def item_sort(self):
-        import Items_Table
+        import Items_Table,CookingAparatus
         # self.items_to_make_lock.acquire()
         # self.items_to_make.clear()
         # Items_Table.lock.acquire()
@@ -239,6 +242,9 @@ class Order_Table(Thread):
             with Items_Table.lock:
                 temp_items_making = Items_Table.items_making.copy()
                 temp_items_done = Items_Table.items_done.copy()
+            with CookingAparatus.lock:
+                temp_items_oven = CookingAparatus.ovens_items
+                temp_items_stove = CookingAparatus.stoves_items
             print("orders making = ", self.orders_making)
             print("Items making = ", temp_items_making)
             print("Items done = ", temp_items_done)
@@ -246,6 +252,10 @@ class Order_Table(Thread):
                 delete_items(j, self.items_to_make)
             for j in temp_items_done:
                 delete_item(j[0], self.items_to_make)
+            for j in temp_items_oven:
+                delete_item(j, self.items_to_make)
+            for j in temp_items_stove:
+                delete_item(j, self.items_to_make)
         # self.items_to_make_lock.release()
         # Items_Table.lock.release()
 

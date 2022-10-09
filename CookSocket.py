@@ -8,6 +8,7 @@ import Plates
 
 
 
+
 class Cook(Thread):
     def __init__(self,id,rank,proficiency):
         Thread.__init__(self)
@@ -38,27 +39,54 @@ class Cook(Thread):
             cookingThread.start()
         printing = 1
         import Items_Table
+        import CookingAparatus
         while True:
             self.select_items()
 
+
             print("\n Items making real",Items_Table.items_making,"\n Items to make real",Items_Table.items_to_make,"\n");
-            if ((len(Items_Table.items_making[self.id_cook - 1]) - self.proficiency ) == 0) or (len(Items_Table.items_to_make) == 0):
+            # if ((len(Items_Table.items_making[self.id_cook - 1]) - self.proficiency ) == 0) or (len(Items_Table.items_to_make) == 0):
+            if (len(Items_Table.items_making[self.id_cook - 1]) != 0) or (len(Items_Table.items_to_make) == 0):
 
                 print("enter to cooking");
-                for c in cooking_list:
+                for index,c in enumerate(cooking_list , start=1):
                     # print(len(c.items))
-                    if (len(c.items) == 0 and len(Items_Table.items_making[self.id_cook - 1]) > 0):
+                    if (len(c.items) == 0 and len(Items_Table.items_making[self.id_cook - 1]) >= index):
                         # Items_Table.lock.acquire()
-                        item_Now = Items_Table.items_making[self.id_cook - 1].pop(0)
+                        print('Cooking one item from cooking list',Items_Table.items_making[self.id_cook - 1])
+                        with Items_Table.lock:
+                            item_Now = Items_Table.items_making[self.id_cook - 1].pop(0)
                         # Items_Table.items_making[self.id_cook - 1].append(item_Now)
-                        Items_Table.Items_making_append(self.id_cook-1,item_Now)
-                        # Items_Table.lock.release()
-                        c.cookingLock.acquire()
-                        c.items.append(item_Now)
-                        print(c.items)
-                        c.cookingLock.release()
-                        # self.cookFunc()
+                        if Plates.plates[item_Now]['cooking-apparatus'] == "null":
+                            Items_Table.Items_making_append(self.id_cook - 1, item_Now)
+                            # Items_Table.lock.release()
+                            c.cookingLock.acquire()
+                            c.items.append(item_Now)
+                            print(c.items)
+                            c.cookingLock.release()
+                        elif Plates.plates[item_Now]['cooking-apparatus'] == "oven":
+                            print("In Oven",CookingAparatus.ovens_items,CookingAparatus.ovens_l)
+                            CookingAparatus.Items_inoven_append(self.id_cook - 1, item_Now)
+                            # Items_Table.lock.release()
+                        elif Plates.plates[item_Now]['cooking-apparatus'] == "stove":
+                            print("In Stove",CookingAparatus.stoves_items,CookingAparatus.stoves_l)
+                            CookingAparatus.Items_instove_append(self.id_cook - 1, item_Now)
+                            # Items_Table.lock.release()
 
+
+                        # self.cookFunc()
+                    # if (len(c.items) == 0 and len(Items_Table.items_making[self.id_cook - 1]) >= index):
+                    #     # Items_Table.lock.acquire()
+                    #     print('Cooking one item from cooking list',Items_Table.items_making[self.id_cook - 1])
+                    #     item_Now = Items_Table.items_making[self.id_cook - 1][index]
+                    #     # Items_Table.items_making[self.id_cook - 1].append(item_Now)
+                    #     # Items_Table.Items_making_append(self.id_cook-1,item_Now)
+                    #     # Items_Table.lock.release()
+                    #     c.cookingLock.acquire()
+                    #     c.items.append(item_Now)
+                    #     print(c.items)
+                    #     c.cookingLock.release()
+                    #     # self.cookFunc()
 
 
 
@@ -85,21 +113,22 @@ class Cook(Thread):
             b = True
             while b :
                 self.selectLock.acquire()
-                item = Items_Table.items_to_make[0]
+                if len(Items_Table.items_to_make) > 0:
+                    item = Items_Table.items_to_make[0]
                 if index <= len(Items_Table.items_to_make) - 1:
                     tmp = Items_Table.items_to_make.copy()
                     item = Items_Table.items_to_make[index]
                 else:
                     index = 0
 
-                if (self.rank == 1):
+                if (self.rank == 1) and len(Items_Table.items_to_make) > 0:
                     if Plates.plates[item]['complexity'] == 1:
                         # with Items_Table.lock:
                         # Items_Table.lock.acquire()
                         # Items_Table.items_making[self.id_cook - 1].append(item)
                         # Items_Table.items_to_make.pop(index)
                         # Items_Table.lock.release()
-                        Items_Table.Items_making_append(self.id_cook - 1, item)
+                        Items_Table.Items_making_append_begin(self.id_cook - 1, item)
                         b = False
                         Items_Table.Items_to_make_pop(index)
                         print(".", Items_Table.items_to_make)
@@ -107,14 +136,14 @@ class Cook(Thread):
                     else:
                         index = index + 1
 
-                if (self.rank == 2):
+                if (self.rank == 2) and len(Items_Table.items_to_make) > 0:
                     if (Plates.plates[item]['complexity'] == 1) or (Plates.plates[item]['complexity'] == 2):
                         # with Items_Table.lock:
                         # Items_Table.lock.acquire()
                         # Items_Table.items_making[self.id_cook - 1].append(item)
                         # Items_Table.items_to_make.pop(index)
                         # Items_Table.lock.release()
-                        Items_Table.Items_making_append(self.id_cook - 1, item)
+                        Items_Table.Items_making_append_begin(self.id_cook - 1, item)
                         b = False
                         Items_Table.Items_to_make_pop(index)
                         print("..", Items_Table.items_to_make)
@@ -122,19 +151,22 @@ class Cook(Thread):
                     else:
                         index = index + 1
 
-                if (self.rank == 3):
+                if (self.rank == 3) and len(Items_Table.items_to_make) > 0:
                     # with Items_Table.lock:
                     # Items_Table.lock.acquire()
                     # Items_Table.items_making[self.id_cook - 1].append(item)
                     # Items_Table.items_to_make.pop(index)
                     # Items_Table.lock.release()
-                    Items_Table.Items_making_append(self.id_cook - 1, item)
+                    Items_Table.Items_making_append_begin(self.id_cook - 1, item)
                     b = False
                     Items_Table.Items_to_make_pop(index)
                     print("...", Items_Table.items_to_make)
                     index = 0
 
-                print("\n", item, "\n")
+                if len(Items_Table.items_to_make) == 0 :
+                    b = False
+                if len(Items_Table.items_to_make) > 0:
+                    print("\n", item, "\n")
                 print("Items to make", Items_Table.items_to_make, self.id_cook)
                 print("Items making", Items_Table.items_making, self.id_cook)
                 x = len(Items_Table.items_to_make)

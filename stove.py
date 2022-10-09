@@ -4,18 +4,25 @@ from threading import Thread
 import Plates
 import Setings
 
+class Stove_C(Thread):
 
-class Cooking_C(Thread):
-
-    def __init__(self, id_cook):
+    def __init__(self):
         Thread.__init__(self)
         self.items = []
-        self.id_cks = id_cook
+        self.id_cks = 0
+        self.it_l = []
 
     def run(self):
         while True:
+            import CookingAparatus
+            if(len(CookingAparatus.items_stove_l)>0):
+                self.it_l = CookingAparatus.items_stove_l.pop(0)
+                CookingAparatus.items_stove_l.insert(0,self.it_l)
+                self.items = []
+                self.items.append(self.it_l[0])
             if len(self.items) > 0:
-                print("Cooking the food")
+                self.id_cks = self.it_l[1]
+                print("Cooking the food in stove")
                 self.cooking(self.items, self.id_cks - 1)
                 self.items.clear()
 
@@ -27,6 +34,7 @@ class Cooking_C(Thread):
         item_temp.append(items[0])
         item_id = items[0]
         item_temp.append(0)
+        print("stove items  : ",item_id)
         cookingTime = Plates.plates[item_id]['preparation-time']
         time.sleep(cookingTime * Setings.timeUnit)
         #Orders_Table.delete_item(item_id, Cooks_Hiring.cooks[id_cks].items_making[id_cks])
@@ -49,7 +57,7 @@ class Cooking_C(Thread):
             self.delete_cook_item(id_cks, item_id)
 
             # self.cookingLock.release()
-            print("items done = ",Items_Table.items_done)
+            print(Items_Table.items_done)
             item_temp.clear()
 
 
@@ -59,13 +67,13 @@ class Cooking_C(Thread):
 
 
     def delete_cook_item(self,id_cks,item_id):
-        import Items_Table
-        for i in range(len(Items_Table.items_making[id_cks])):
-            if Items_Table.items_making[id_cks][i] == item_id:
+        import CookingAparatus
+        for i in range(len(CookingAparatus.items_stove_l)):
+            if CookingAparatus.items_stove_l[i] == self.it_l:
                 # Items_Table.lock.acquire()
                 # Items_Table.items_making[id_cks].pop(i)
-                Items_Table.Items_making_pop(id_cks,i)
-                print("Cooking items making = " , Items_Table.items_making)
+                CookingAparatus.Items_instove_pop(i)
+                print("Cooking in stove items making = " , CookingAparatus.items_stove_l)
                 # Items_Table.lock.release()
                 return
 
