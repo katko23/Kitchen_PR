@@ -44,7 +44,7 @@ class Cook(Thread):
             self.select_items()
 
 
-            print("\n Items making real",Items_Table.items_making,"\n Items to make real",Items_Table.items_to_make,"\n");
+            # print("\n Items making real",Items_Table.items_making,"\n Items to make real",Items_Table.items_to_make,"\n");
             # if ((len(Items_Table.items_making[self.id_cook - 1]) - self.proficiency ) == 0) or (len(Items_Table.items_to_make) == 0):
             if (len(Items_Table.items_making[self.id_cook - 1]) != 0) or (len(Items_Table.items_to_make) == 0):
 
