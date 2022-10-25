@@ -15,7 +15,7 @@ class Cooking_C(Thread):
     def run(self):
         while True:
             if len(self.items) > 0:
-                print("Cooking the food")
+                print("Cooking the food ",self.items)
                 self.cooking(self.items, self.id_cks - 1)
                 self.items.clear()
 
@@ -49,7 +49,7 @@ class Cooking_C(Thread):
             self.delete_cook_item(id_cks, item_id)
 
             # self.cookingLock.release()
-            print("items done = ",Items_Table.items_done)
+            # print("items done = ",Items_Table.items_done)
             item_temp.clear()
 
 
@@ -65,7 +65,7 @@ class Cooking_C(Thread):
                 # Items_Table.lock.acquire()
                 # Items_Table.items_making[id_cks].pop(i)
                 Items_Table.Items_making_pop(id_cks,i)
-                print("Cooking items making = " , Items_Table.items_making)
+                # print("Cooking items making = " , Items_Table.items_making)
                 # Items_Table.lock.release()
                 return
 

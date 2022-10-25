@@ -149,7 +149,9 @@ class Order_Table(Thread):
 
     def send_item(self,items):
         import json
-        dictToSend = self.body + json.dumps(items)
+        dictToSend = items
+        if 'waiter_id' not in dictToSend:
+            dictToSend['restaurant_id'] = Setings.restaurant_id
         res = requests.post("http://" + str(self.host) + ":" + str(self.port) + "/distribution", json=dictToSend)
         print('response from server:', res.text)
         dictFromServer = res.json()

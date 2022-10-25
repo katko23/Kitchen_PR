@@ -1,4 +1,8 @@
-plates = [dict() for x in range(14)]
+plates = [dict() for x in range(6)]
+
+plates[0] = {
+"id": 0,
+}
 
 plates[1] = {
 "id": 1,
@@ -37,69 +41,5 @@ plates[5] = {
 "name": "Island Duck with Mulberry Mustard",
 "preparation-time": 35,
 "complexity": 3,
-"cooking-apparatus": "oven"
-}
-
-plates[6] = {
-"id": 6,
-"name": "Waffles",
-"preparation-time": 10,
-"complexity": 1,
-"cooking-apparatus": "stove"
-}
-
-plates[7] = {
-"id": 7,
-"name": "Aubergine",
-"preparation-time": 20,
-"complexity": 2,
-"cooking-apparatus": "oven"
-}
-
-plates[8] = {
-"id": 8,
-"name": "Lasagna",
-"preparation-time": 30,
-"complexity": 2,
-"cooking-apparatus": "oven"
-}
-
-plates[9] = {
-"id": 9,
-"name": "Burger",
-"preparation-time": 15,
-"complexity": 1,
-"cooking-apparatus": "stove"
-}
-
-plates[10] = {
-"id": 10,
-"name": "Gyros",
-"preparation-time": 15,
-"complexity": 1,
-"cooking-apparatus": "null"
-}
-
-plates[11] = {
-"id": 11,
-"name": "Kebab",
-"preparation-time": 15,
-"complexity": 1,
-"cooking-apparatus": "null"
-}
-
-plates[12] = {
-"id": 12,
-"name": "Unagi Maki",
-"preparation-time": 20,
-"complexity": 2,
-"cooking-apparatus": "null"
-}
-
-plates[13] = {
-"id": 13,
-"name": "Tobacco Chicken",
-"preparation-time": 30,
-"complexity": 2,
 "cooking-apparatus": "oven"
 }
