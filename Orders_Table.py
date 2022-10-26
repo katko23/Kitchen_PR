@@ -149,7 +149,9 @@ class Order_Table(Thread):
 
     def send_item(self,items):
         import json
-        dictToSend = self.body + json.dumps(items)
+        dictToSend = items
+        if 'waiter_id' not in dictToSend:
+            dictToSend['restaurant_id'] = Setings.restaurant_id
         res = requests.post("http://" + str(self.host) + ":" + str(self.port) + "/distribution", json=dictToSend)
         print('response from server:', res.text)
         dictFromServer = res.json()
@@ -195,11 +197,11 @@ class Order_Table(Thread):
     def order_receiving(self):
         # sortam orderurile noi in dependenta de priority si le bagam in spatele listei
         if len(self.orders) > 0:
-            print("Enter to order_receiving")
+            # print("Enter to order_receiving")
             self.orders_lock.acquire()
             orders_raw_sorted = []
             orders_raw_sorted.extend(self.orders)
-            print(orders_raw_sorted)
+            # print(orders_raw_sorted)
             orders_raw_sorted = sorted(orders_raw_sorted, key=itemgetter('priority'), reverse=True)
             orders_raw_sorted = sorted(orders_raw_sorted, key=itemgetter('pick_up_time'))
             self.orders.clear()
@@ -245,9 +247,9 @@ class Order_Table(Thread):
             with CookingAparatus.lock:
                 temp_items_oven = CookingAparatus.ovens_items
                 temp_items_stove = CookingAparatus.stoves_items
-            print("orders making = ", self.orders_making)
-            print("Items making = ", temp_items_making)
-            print("Items done = ", temp_items_done)
+            # print("orders making = ", self.orders_making)
+            # print("Items making = ", temp_items_making)
+            # print("Items done = ", temp_items_done)
             for j in temp_items_making:
                 delete_items(j, self.items_to_make)
             for j in temp_items_done:

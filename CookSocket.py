@@ -44,11 +44,11 @@ class Cook(Thread):
             self.select_items()
 
 
-            print("\n Items making real",Items_Table.items_making,"\n Items to make real",Items_Table.items_to_make,"\n");
+            # print("\n Items making real",Items_Table.items_making,"\n Items to make real",Items_Table.items_to_make,"\n");
             # if ((len(Items_Table.items_making[self.id_cook - 1]) - self.proficiency ) == 0) or (len(Items_Table.items_to_make) == 0):
             if (len(Items_Table.items_making[self.id_cook - 1]) != 0) or (len(Items_Table.items_to_make) == 0):
 
-                print("enter to cooking");
+                # print("enter to cooking");
                 for index,c in enumerate(cooking_list , start=1):
                     # print(len(c.items))
                     if (len(c.items) == 0 and len(Items_Table.items_making[self.id_cook - 1]) >= index):
@@ -62,7 +62,7 @@ class Cook(Thread):
                             # Items_Table.lock.release()
                             c.cookingLock.acquire()
                             c.items.append(item_Now)
-                            print(c.items)
+                            # print(c.items)
                             c.cookingLock.release()
                         elif Plates.plates[item_Now]['cooking-apparatus'] == "oven":
                             print("In Oven",CookingAparatus.ovens_items,CookingAparatus.ovens_l)
@@ -174,7 +174,7 @@ class Cook(Thread):
         # Items_Table.lock.release()
 
     def cookFunc(self):
-        from main import order_Table
+        from R1Kitchen import order_Table
         order_Table.items_done_lock.acquire()
         for item in self.items_maded:
             order_Table.add_items_done(item)
