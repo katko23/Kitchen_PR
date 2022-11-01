@@ -181,7 +181,7 @@ class Order_Table(Thread):
                     items_sending_l.append(items_sending)
                 self.items_done = delete_items_o(f['items'], self.items_done)
                 f['cooking_time'] = time.time() - f['pick_up_time']
-                f['cookind_details'] = items_sending_l
+                f['cooking_details'] = items_sending_l
                 temp = f.copy()
                 self.orders_done.append(temp)
                 self.orders_making.pop(0)

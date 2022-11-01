@@ -3,7 +3,7 @@ import json
 import socket,Setings
 import threading
 from threading import Thread
-import Cooking
+import Items_Table
 from flask import Flask, render_template, request, url_for, jsonify
 import Orders_Table
 hostName = Setings.serverName
@@ -30,7 +30,7 @@ class Server(Thread):
             Orders_Table.Order_Table.orders_lock.release()
             serverLock.release()
             print("Append raw orders to the queue")
-            dictToReturn = {'answer': "Kitchen received"}
+            dictToReturn = {'Plates_on_prepairing': len(Items_Table.items_to_make + Items_Table.items_making + Items_Table.items_inoven + Items_Table.items_instove)}
             return jsonify(dictToReturn)
 
 
